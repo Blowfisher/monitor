@@ -14,7 +14,7 @@ from ansible.plugins.callback import CallbackBase
 from ansible import context
 import ansible.constants as C
 from optparse import Values
-#from ansible.utils.sentinel import Sentinel
+from ansible.utils.sentinel import Sentinel
 
 
 class ResultCallback(CallbackBase):
@@ -33,6 +33,7 @@ class ResultCallback(CallbackBase):
         self.host_ok[result._host.get_name()] = result
 
 #context.CLIARGS = ImmutableDict(connection='local',module_path=None,forks=2,become=None,become_method=None,become_user=None,check=False,diff=False)
+context.CLIARGS = ImmutableDict(connection='smart', module_path=None, verbosity=5,forks=10, become=None, become_method=None,become_user=None, check=False, diff=False)
 
 class AnsibleApi(object):
     def __init__(self):
@@ -41,11 +42,10 @@ class AnsibleApi(object):
                     'scp_extra_args': '', 'ssh_extra_args': '', 'force_handlers': False, 'flush_cache': None,
                     'become': False, 'become_method': 'sudo', 'become_user': None, 'become_ask_pass': False,
                     'tags': ['all'], 'skip_tags': [], 'check': False, 'syntax': None, 'diff': False,
-                    'inventory': '/Users/caishichao/Code/AnsibleCentrolManagement/inventory/hosts.uat',
+                    'inventory': '/etc/ansible/hosts',
                     'listhosts': None, 'subset': None, 'extra_vars': [], 'ask_vault_pass': False,
                     'vault_password_files': [], 'vault_ids': [], 'forks': 5, 'module_path': None, 'listtasks': None,
                     'listtags': None, 'step': None, 'start_at_task': None, 'args': ['fake']}
-# {'verbosity' : 0,'ask_pass': False,'private_key_file': None,'remote_user':None,'connection': 'smart','timeout': 10,'ssh_common_args': '','flush_cache': True,'inventory': '/etc/ansible/hosts','fork': 1,'args': ['fake']}
         self.ops = Values(self.options)
         self.loader = DataLoader()
         self.passwords = dict()
@@ -102,9 +102,9 @@ class AnsibleApi(object):
 
 if __name__ == '__main__':
     a = AnsibleApi()
-    host_list = ['etcd',]
+    host_list = ['192.168.16.105',]
 #    dirname = '/tmp'
-    tasks_list = [dict(action=dict(module='command',args='ls /tmp')),]
+    tasks_list = [dict(action=dict(module='command',args="ip add |grep ens33 |grep inet|awk '{print $2}'"))]
     data = a.runansible(host_list,tasks_list)
     print(data)
                                                             
