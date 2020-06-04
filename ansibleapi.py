@@ -32,11 +32,20 @@ class ResultCallback(CallbackBase):
     def v2_runner_on_failed(self,result,*args,**kwargs):
         self.host_ok[result._host.get_name()] = result
 
-context.CLIARGS = ImmutableDict(connection='local',module_path=None,forks=2,become=None,become_method=None,become_user=None,check=False,diff=False)
+#context.CLIARGS = ImmutableDict(connection='local',module_path=None,forks=2,become=None,become_method=None,become_user=None,check=False,diff=False)
 
 class AnsibleApi(object):
     def __init__(self):
-        self.options = {'verbosity' : 0,'ask_pass': False,'private_key_file': None,'remote_user':None,'connection': 'smart','timeout': 10,'ssh_common_args': '','flush_cache': True,'inventory': '/etc/ansible/hosts','fork': 1,'args': ['fake']}
+        self.options ={'verbosity': 0, 'ask_pass': False, 'private_key_file': None, 'remote_user': None,
+                    'connection': 'smart', 'timeout': 10, 'ssh_common_args': '', 'sftp_extra_args': '',
+                    'scp_extra_args': '', 'ssh_extra_args': '', 'force_handlers': False, 'flush_cache': None,
+                    'become': False, 'become_method': 'sudo', 'become_user': None, 'become_ask_pass': False,
+                    'tags': ['all'], 'skip_tags': [], 'check': False, 'syntax': None, 'diff': False,
+                    'inventory': '/Users/caishichao/Code/AnsibleCentrolManagement/inventory/hosts.uat',
+                    'listhosts': None, 'subset': None, 'extra_vars': [], 'ask_vault_pass': False,
+                    'vault_password_files': [], 'vault_ids': [], 'forks': 5, 'module_path': None, 'listtasks': None,
+                    'listtags': None, 'step': None, 'start_at_task': None, 'args': ['fake']}
+# {'verbosity' : 0,'ask_pass': False,'private_key_file': None,'remote_user':None,'connection': 'smart','timeout': 10,'ssh_common_args': '','flush_cache': True,'inventory': '/etc/ansible/hosts','fork': 1,'args': ['fake']}
         self.ops = Values(self.options)
         self.loader = DataLoader()
         self.passwords = dict()
@@ -61,7 +70,7 @@ class AnsibleApi(object):
                    passwords = self.passwords,
                    stdout_callback = self.results_callback,
                    run_additional_callbacks = C.DEFAULT_LOAD_CALLBACK_PLUGINS,
-#                   fun_tree = False,
+                   run_tree = False,
             )
             result = tqm.run(play)
         finally:
@@ -93,9 +102,9 @@ class AnsibleApi(object):
 
 if __name__ == '__main__':
     a = AnsibleApi()
-    host_list = '10.40.39.101'
-    dirname = '/tmp'
-    tasks_list = [dict(action=dict(module='command',args='ls {0}'.format(dirname))),]
+    host_list = ['etcd',]
+#    dirname = '/tmp'
+    tasks_list = [dict(action=dict(module='command',args='ls /tmp')),]
     data = a.runansible(host_list,tasks_list)
-    print(json.loads(data['success']['10.'])['stdout_lines'])
+    print(data)
                                                             
