@@ -2,7 +2,7 @@
 #coding:utf8
 #coding:utf8
 
-from test.ansibleapi import AnsibleApi
+from ansibleapi import AnsibleApi
 
 
 __author__ = 'Bambo'

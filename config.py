@@ -4,7 +4,7 @@ import os
 import re
 import json
 import yaml
-from test.ansibleapi import AnsibleApi
+from ansibleapi import AnsibleApi
 
 
 __author__ = 'Bambo'

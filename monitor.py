@@ -8,9 +8,9 @@ import random
 import yaml
 import logging
 from datetime import datetime
-from test.ansibleapi import AnsibleApi
-from test.dirname import Director,Filer
-from test.server  import Server
+from ansibleapi import AnsibleApi
+from config import Director,Filer
+from server  import Server
 
 class Monitor(object):
     def __init__(self,timer,filename):
