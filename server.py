@@ -2,10 +2,24 @@
 #coding:utf8
 #coding:utf8
 
+import random
 from ansibleapi import AnsibleApi
+from config import Filer
+from subprocess import Popen,PIPE
 
 
 __author__ = 'Bambo'
+
+class Emitor(object):
+    all = str(Popen("a=`ansible all --list-hosts|tr -d ' '`&& echo $a",shell=True,stdout=PIPE,stderr=PIPE).stdout.read()).strip('\\n\'\"').split(' ')[1:]
+    @classmethod
+    def emiter_com(cls):
+        return Emitor.all[random.randint(0,len(Emitor.all)-1)]
+
+    @classmethod
+    def emiter_spec(cls,servicename):
+        spec = str(Popen("a=`ansible {0} --list-hosts|tr -d ' '`&& echo $a".format(servicename),shell=True,stdout=PIPE,stderr=PIPE).stdout.read()).strip('\\n\'\"').split(' ')[1:]
+        return spec[random.randint(0,len(spec)-1)]
 
 class Server(object):
     def __init__(self,service_name,target):
@@ -49,8 +63,8 @@ class Server(object):
         data = self.a.runansible(self.target,self.task)
         return data
 
-
 if __name__ == '__main__':
     a = Server('scavenger','10.40.39.101')
     data = a.sv_down()
     print(data)
+

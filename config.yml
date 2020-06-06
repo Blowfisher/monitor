@@ -1,25 +1,25 @@
-#author: Bambo
-#version v1
 times: 3
-#unit hour
 time_zone:
   start_point: 0
   end_point: 14
+intervals: 30
 
-#Add alert script
-cpu: cpu.sh
-mem: mem.sh
-disk: disk.sh
-asr: asr.sh
-nlu: nlu.sh
-#if True the script will do the action now.
-# if False  below configure is None
+commom:
+  - scavenger
+  - bridger
+  - cpu
+scripts:
+  cpu: cpu.sh
+  mem: mem.sh
+  disk: disk.sh
+  asr: asr.sh
+  nlu: nlu.sh
 actions:
   - action1:
       host: localhost
       servername: scavenger
       state: stop
       ack: False
-# time can is now timestrip or after number minutes
       time: now
-      recovery_time: 5
+      recovery_time: 300
+      type: sv

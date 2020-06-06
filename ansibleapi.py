@@ -33,7 +33,7 @@ class ResultCallback(CallbackBase):
         self.host_ok[result._host.get_name()] = result
 
 #context.CLIARGS = ImmutableDict(connection='local',module_path=None,forks=2,become=None,become_method=None,become_user=None,check=False,diff=False)
-context.CLIARGS = ImmutableDict(connection='smart', module_path=None, verbosity=5,forks=10, become=None, become_method=None,become_user=None, check=False, diff=False)
+context.CLIARGS = ImmutableDict(connection='smart', module_path=None, verbosity=5,forks=1, become=None, become_method=None,become_user=None, check=False, diff=False)
 
 class AnsibleApi(object):
     def __init__(self):
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     a = AnsibleApi()
     host_list = ['192.168.16.105',]
 #    dirname = '/tmp'
-    tasks_list = [dict(action=dict(module='command',args="ip add |grep ens33 |grep inet|awk '{print $2}'"))]
+    tasks_list = [dict(action=dict(module='command',args="ls /tmp"))]
     data = a.runansible(host_list,tasks_list)
-    print(data)
+    print(data['success']['192.168.16.105'])
                                                             

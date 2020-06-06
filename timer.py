@@ -18,10 +18,11 @@ class Timer(object):
             data.append(random.randint(self.time_set[0],self.time_set[1]))
             time.sleep(1)
         return sorted(data)
-    def local_now_timer(self):
+    @classmethod
+    def local_now_timer(cls):
         dt = (datetime.now()+timedelta(hours=8)).ctime().replace("'",'')
         return dt
 
 if __name__ == '__main__':
-    a = Timer(3,1,12)
-    print(a.generator())
+    a = Timer.local_now_timer()
+    print(a)

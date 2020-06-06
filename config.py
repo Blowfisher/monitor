@@ -70,4 +70,6 @@ if __name__ == '__main__':
     data= dir_demo.return_remote_list('10.40.39.101',dirname)
 
     print('The direcotry {1} has :{0}'.format(data,dirname))
-                                                               
+
+
+
