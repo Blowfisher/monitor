@@ -1,6 +1,6 @@
-times: 3
+times: 2
 time_zone:
-  start_point: 0
+  start_point: a
   end_point: 14
 intervals: 30
 
@@ -11,7 +11,7 @@ items:
   - mem
   - disk
 
-sevices:
+services:
   - asr
   - frontend
   - searchall
@@ -30,6 +30,6 @@ actions:
       state: stop
       ack: False
       time: now
-      recovery_time: 300
+      recovery_time: 200
       type: sv
 log_file: monitoring.log

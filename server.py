@@ -2,24 +2,26 @@
 #coding:utf8
 #coding:utf8
 
-import random
+import logging
 from ansibleapi import AnsibleApi
 from config import Filer
 from subprocess import Popen,PIPE
 
 
 __author__ = 'Bambo'
-
+logger = logging.getLogger('monitor')
 class Server(object):
     def __init__(self,service_name,target):
         self.name = service_name
         self.target = target
         self.a = AnsibleApi()
+        logger = logging.getLogger('monitor')
 
 # for init service
     def action(self,ack):
         self.task = [dict(action=dict(module='shell',args='service {0} {1}'.format(ack,self.name))),]
         data = self.a.runansible(self.target,self.task)
+        logger.info('{0}\'s service: {1}  starting {2}'.format(self.target,self.name,ack))
         return data
     def start(self):
         data = self.action('start')
@@ -37,6 +39,7 @@ class Server(object):
     def sv_action(self,ack):
         self.task = [dict(action=dict(module='shell',args="/usr/local/bin/sv {0} {1}".format(ack,self.name))),]
         data = self.a.runansible(self.target,self.task)
+        logger.info('{0}\'s service: {1}  starting {2}'.format(self.target,self.name,ack))
         return data
 
     def sv_up(self):
@@ -47,9 +50,10 @@ class Server(object):
         data = self.sv_action('down')
         return data
 #for script alert
-    def runner(self,service_name):
+    def runner(self,ack):
         self.task = [dict(action=dict(module='script',args="{0}".format(self.name))),]
         data = self.a.runansible(self.target,self.task)
+        logger.info('{0}\'s service: {1}  starting {2}'.format(self.target,self.name,ack))
         return data
 
 if __name__ == '__main__':

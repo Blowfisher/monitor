@@ -10,6 +10,7 @@ from ansibleapi import AnsibleApi
 
 __author__ = 'Bambo'
 DEFAULT_CONFIG = 'config.yml'
+logger = logging.getLogger('monitor')
 
 class Director(object):
     def __init__(self):
@@ -50,9 +51,14 @@ class Filer(object):
         self.filename = filename
 
     def read_f(self):
-        with open(self.filename,'rb') as f:
-            data = f.read()
-            return data
+        try:
+            with open(self.filename,'rb') as f:
+                data = f.read()
+                return data
+        except Exception as e:
+            print('Error happened:\n {0}'.format(e))
+            logginer.getLogger('monitor')
+            raise Exception('Configuration file error')
 
     def get_yaml_data(self):
         data = yaml.load(self.read_f(),Loader=yaml.Loader)
@@ -118,7 +124,7 @@ class Logger(object):
  }
 }
 
-    logging.config.dictConfig(LOGGING)
+        logging.config.dictConfig(LOGGING)
 
 
 if __name__ == '__main__':
