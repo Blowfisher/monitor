@@ -117,7 +117,7 @@ class Logger(object):
   }},
 'loggers':{
    'monitor':{
-      'handlers': ['info','error'],
+      'handlers': ['info',],
       'level': 'INFO',
       'propagate': True
    }
