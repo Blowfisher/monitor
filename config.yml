@@ -4,16 +4,25 @@ time_zone:
   end_point: 14
 intervals: 30
 
-commom:
+items:
   - scavenger
   - bridger
   - cpu
+  - mem
+  - disk
+
+sevices:
+  - asr
+  - frontend
+  - searchall
+  - zookeeper
+  - resourcemanager
+  - lb
+
 scripts:
   cpu: cpu.sh
   mem: mem.sh
   disk: disk.sh
-  asr: asr.sh
-  nlu: nlu.sh
 actions:
   - action1:
       host: localhost
@@ -23,3 +32,4 @@ actions:
       time: now
       recovery_time: 300
       type: sv
+log_file: monitoring.log

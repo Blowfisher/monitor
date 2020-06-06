@@ -4,10 +4,12 @@ import os
 import re
 import json
 import yaml
+import logging,logging.config
 from ansibleapi import AnsibleApi
 
 
 __author__ = 'Bambo'
+DEFAULT_CONFIG = 'config.yml'
 
 class Director(object):
     def __init__(self):
@@ -62,6 +64,61 @@ class Filer(object):
         yaml.dump(obj,file_full_path,Dumper=yaml.RoundTripDumper)
         return True
 
+class Logger(object):
+    def __init__(self,filename=DEFAULT_CONFIG):
+        self.name = filename
+        try:
+            log_file_path = Filer(self.name).get_yaml_data()['log_file']
+        except Exception as e:
+            print('Configuration file\'s key:log_file is gone...')
+            print('Use default log file monitoring.log')
+            log_file_path = 'monitoring.log'
+        LOGGING = {
+'version': 1,
+'disable_existing_loggers': True,
+'formatters': {
+   'standard': {
+      'format': '%(asctime)s %(levelname)s %(message)s'
+    },
+   'detail':{
+      'format': '%(asctime)s %(levelname)s  %(pathname)s[line:%(lineno)d] %(message)s'
+   }
+ },
+'handlers':{
+  'info':{
+  'level': 'INFO',
+  'class': 'logging.handlers.RotatingFileHandler',
+  'filename': log_file_path,
+  'maxBytes': 1024*1024*5,
+  'backupCount': 3,
+  'formatter': 'standard'
+  },
+  'warning':{
+    'level': 'WARNING',
+    'class': 'logging.handlers.RotatingFileHandler',
+    'filename': log_file_path,
+    'maxBytes': 1024*1024*5,
+    'backupCount': 2,
+    'formatter': 'standard'
+  },
+  'error':{
+    'level': 'ERROR',
+    'class': 'logging.handlers.RotatingFileHandler',
+    'filename': log_file_path,
+    'maxBytes': 1024*1024*5,
+    'backupCount': 2,
+    'formatter': 'detail'
+  }},
+'loggers':{
+   'monitor':{
+      'handlers': ['info','error'],
+      'level': 'INFO',
+      'propagate': True
+   }
+ }
+}
+
+    logging.config.dictConfig(LOGGING)
 
 
 if __name__ == '__main__':

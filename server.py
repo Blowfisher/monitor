@@ -10,17 +10,6 @@ from subprocess import Popen,PIPE
 
 __author__ = 'Bambo'
 
-class Emitor(object):
-    all = str(Popen("a=`ansible all --list-hosts|tr -d ' '`&& echo $a",shell=True,stdout=PIPE,stderr=PIPE).stdout.read()).strip('\\n\'\"').split(' ')[1:]
-    @classmethod
-    def emiter_com(cls):
-        return Emitor.all[random.randint(0,len(Emitor.all)-1)]
-
-    @classmethod
-    def emiter_spec(cls,servicename):
-        spec = str(Popen("a=`ansible {0} --list-hosts|tr -d ' '`&& echo $a".format(servicename),shell=True,stdout=PIPE,stderr=PIPE).stdout.read()).strip('\\n\'\"').split(' ')[1:]
-        return spec[random.randint(0,len(spec)-1)]
-
 class Server(object):
     def __init__(self,service_name,target):
         self.name = service_name
