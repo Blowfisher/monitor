@@ -6,6 +6,7 @@ import sys
 import time
 import json
 import logging
+import random
 from datetime import datetime
 from subprocess import Popen,PIPE
 from ansibleapi import AnsibleApi
@@ -33,22 +34,29 @@ class Emitor(object):
         else:
             raise('{0} not exists.'.format(filename))
     @classmethod
-    def emiter_com(cls):
+    def emiter_ip(cls):
         """return common ip"""
         return Emitor.common[random.randint(0,len(Emitor.common)-1)]
-    @classmethod
-    def emiter_spec(cls,servicename):
-        """return specific service\'s ip"""
-        spec = str(Popen("a=`ansible {0} --list-hosts|tr -d ' '`&& echo $a".format(servicename),shell=True,stdout=PIPE,stderr=PIPE).stdout.read()).strip('\\n\'\"').split(' ')[1:]
-        return spec[random.randint(0,len(spec)-1)]
+    def emiter(self):
+        """return host\'s ip"""
+        compent = self.compents[random.randint(0,len(self.compents)-1)]
+        logger.info('Compent: {0}'.format(compent))
+        spec = str(Popen("a=`ansible {0} --list-hosts|tr -d ' '`&& echo $a".format(compent),shell=True,stdout=PIPE,stderr=PIPE).stdout.read()).strip('\\n\'\"').split(' ')[1:]
+        logger.info('ipset : {0}'.format(spec))
+        return [compent,spec[random.randint(0,len(spec)-1)]]
+    def emiter_item(self,compent):
+        items = self.items
+        items.append(compent)
+        return items[random.randint(0,len(items)-1)]
 
     def __reload(self):
         self.config = Filer(self.filename).get_yaml_data()
         self.intervals = self.config['intervals']
+        self.rec_intervals = self.config['recovery_intervals']
         self.start_point = self.config['time_zone']['start_point']
         self.end_point = self.config['time_zone']['end_point']
         self.items = self.config['items']
-        self.service = self.config['services']
+        self.compents = self.config['compents']
         self.scripts = self.config['scripts']
         self.actions = self.config['actions']
         self.log_file = self.config['log_file']
@@ -68,7 +76,12 @@ class Emitor(object):
                 logger.info('Reload {0} ...'.format(self.filename))
                 logger.info('mtime is {0}'.format(Emitor.mtime))
                 self.__reload()
-            self.check()
+            data = self.check()
+            if data != None:
+                ticker = Server(data[-1],data[1])
+                ticker.alert()
+                time.sleep(self.rec_intervals)
+                ticker.recover()
             time.sleep(self.intervals)
 
     def check(self):
@@ -82,10 +95,14 @@ class Emitor(object):
             return 
         if datetime.now().hour == self.timer_list[0]:
             self.num = self.timer_list.pop(0)
-            logger.info('{0} task start...'.format(self.num))
+            logger.info('Emiter {0} task start...'.format(self.num))
+            alert = self.emiter()
+            alert.append(self.emiter_item(alert[0]))
+            logger.info('Emiter a {0}:{1} {2} alert'.format(alert[0],alert[1],alert[2]))
+            return alert
         if datetime.now().hour >  self.timer_list[0]:
             self.timer_list.pop(0)
-            logger.info('Poped one pointer...')
+            logger.info('Poped one point...')
 
 if __name__ == '__main__':
     Logger()

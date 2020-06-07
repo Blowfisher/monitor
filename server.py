@@ -15,7 +15,6 @@ class Server(object):
         self.name = service_name
         self.target = target
         self.a = AnsibleApi()
-        logger = logging.getLogger('monitor')
 
 # for init service
     def action(self,ack):
@@ -55,6 +54,10 @@ class Server(object):
         data = self.a.runansible(self.target,self.task)
         logger.info('{0}\'s service: {1}  starting {2}'.format(self.target,self.name,ack))
         return data
+    def alert(self):
+        logger.info('emiter a alert')
+    def recover(self):
+        logger.info('recovery a alert')
 
 if __name__ == '__main__':
     a = Server('scavenger','10.40.39.101')

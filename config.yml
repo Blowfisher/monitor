@@ -1,8 +1,9 @@
 times: 2
 time_zone:
-  start_point: a
-  end_point: 14
+  start_point: 15
+  end_point: 15
 intervals: 30
+recovery_intervals: 30
 
 items:
   - scavenger
@@ -11,7 +12,7 @@ items:
   - mem
   - disk
 
-services:
+compents:
   - asr
   - frontend
   - searchall
@@ -23,6 +24,12 @@ scripts:
   cpu: cpu.sh
   mem: mem.sh
   disk: disk.sh
+  zookeeper: zk.sh
+  asr: asr.sh
+  frontend: frontend.sh
+  searchall: searchall.sh
+  resourcemanager: resourcemanager.sh
+  lb: lb.sh
 actions:
   - action1:
       host: localhost

@@ -57,7 +57,7 @@ class Filer(object):
                 return data
         except Exception as e:
             print('Error happened:\n {0}'.format(e))
-            logginer.getLogger('monitor')
+            logger.error('Error happened:\n {0}'.format(e))
             raise Exception('Configuration file error')
 
     def get_yaml_data(self):
@@ -68,6 +68,7 @@ class Filer(object):
         current_path = os.path.abspath('.')
         file_full_path = os.path.join(current_path,filename)
         yaml.dump(obj,file_full_path,Dumper=yaml.RoundTripDumper)
+        logger.info('File {0} dumped '.format(file_full_path))
         return True
 
 class Logger(object):
@@ -76,8 +77,8 @@ class Logger(object):
         try:
             log_file_path = Filer(self.name).get_yaml_data()['log_file']
         except Exception as e:
-            print('Configuration file\'s key:log_file is gone...')
-            print('Use default log file monitoring.log')
+            logger.info('Configuration file\'s key:log_file is gone...')
+            logger.info('Use default log file monitoring.log')
             log_file_path = 'monitoring.log'
         LOGGING = {
 'version': 1,
