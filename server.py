@@ -55,12 +55,25 @@ class Server(object):
         logger.info('{0}\'s service: {1}  starting {2}'.format(self.target,self.name,ack))
         return data
     def alert(self):
+        if self.name in ['scavenger','bridge']:
+            data = self.sv_down()
+            logger.info(data)
+        else:
+            data = self.runner('stop')
+            logger.info(data)
+            
         logger.info('emiter a alert')
     def recover(self):
+        if self.name in ['scavenger','bridge']:
+            data = self.sv_up()
+            logger.info(data)
+        else:
+            data = self.runner('start')
+            logger.info(data)
         logger.info('recovery a alert')
 
 if __name__ == '__main__':
-    a = Server('scavenger','10.40.39.101')
+    a = Server('scavenger','192.168.16.105')
     data = a.sv_down()
     print(data)
 

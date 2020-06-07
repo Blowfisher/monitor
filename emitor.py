@@ -48,7 +48,10 @@ class Emitor(object):
         items = self.items
         if self.compent_emiter:
             items.append(compent)
-        return items[random.randint(0,len(items)-1)]
+        data = items[random.randint(0,len(items)-1)]
+        if data not in ['scavenger','bridge']:
+            return self.scripts[data]
+        return data
 
     def __reload(self):
         self.config = Filer(self.filename).get_yaml_data()
@@ -105,6 +108,17 @@ class Emitor(object):
         if datetime.now().hour >  self.timer_list[0]:
             self.timer_list.pop(0)
             logger.info('Poped one point...')
+    def action(self):
+        tasks = self.actions
+        for task in tasks:
+            target = task['action']['host']
+            item = task['action']['item']
+            stime = task['action']['start_time']
+            rtime = task['action']['recovery_time']
+            ack = task['action']['ack']
+            state = task['action']['state']
+            if ack:
+                pass
 
 if __name__ == '__main__':
     Logger()

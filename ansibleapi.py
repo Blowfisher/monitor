@@ -104,7 +104,7 @@ if __name__ == '__main__':
     a = AnsibleApi()
     host_list = ['192.168.16.105',]
 #    dirname = '/tmp'
-    tasks_list = [dict(action=dict(module='command',args="ls /tmp"))]
+    tasks_list = [dict(action=dict(module='script',args="disk.sh start"))]
     data = a.runansible(host_list,tasks_list)
-    print(data['success']['192.168.16.105'])
+    print(data['success'])
                                                             
