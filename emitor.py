@@ -46,13 +46,15 @@ class Emitor(object):
         return [compent,spec[random.randint(0,len(spec)-1)]]
     def emiter_item(self,compent):
         items = self.items
-        items.append(compent)
+        if self.compent_emiter:
+            items.append(compent)
         return items[random.randint(0,len(items)-1)]
 
     def __reload(self):
         self.config = Filer(self.filename).get_yaml_data()
         self.intervals = self.config['intervals']
         self.rec_intervals = self.config['recovery_intervals']
+        self.compent_emiter = self.config['compent_emiter']
         self.start_point = self.config['time_zone']['start_point']
         self.end_point = self.config['time_zone']['end_point']
         self.items = self.config['items']

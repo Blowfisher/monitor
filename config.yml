@@ -1,9 +1,10 @@
-times: 2
+times: 3
 time_zone:
-  start_point: 15
+  start_point: 0
   end_point: 15
 intervals: 30
 recovery_intervals: 30
+compent_emiter: False
 
 items:
   - scavenger
